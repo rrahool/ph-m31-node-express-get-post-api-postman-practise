@@ -23,13 +23,33 @@
         <p style="display: none; color: green;" id="successMessage">
             <small>Product Added Successfully</small>
         </p>
+
+        <ul id="product-list">
+
+        </ul>
     </div>
     <script>
-        fetch('http://localhost:4000/users/3')
+        // get data
+        fetch('http://localhost:4000/products')
         .then(res => res.json())
         .then(data => {
-            document.getElementById('productName').innerText = data.name;
+            // document.getElementById('productName').innerText = data.name;
+            // console.log(data);
+            displayProducts(data);
         });
+
+        function displayProducts(data){
+            const productContainer = document.getElementById('product-list');
+            for (let i = 0; i < data.length; i++) {
+                const product = data[i];
+                appendProduct(product, productContainer);
+            }
+        }
+        function appendProduct(product, productContainer){
+            const item = document.createElement('li');
+            item.innerText = `Name: ${product.name} || Price: $${product.price} || Available: ${product.stock}`;
+            productContainer.appendChild(item);
+        }
 
         // POST data to the server
         const btnAddUser = document.getElementById('addProduct');
@@ -38,7 +58,7 @@
             const price = document.getElementById('price').value;
             const stock = document.getElementById('stock').value;
             const product = {name, price, stock}
-            console.log(product);
+            // console.log(product);
 
             // post
             fetch('http://localhost:4000/addProduct', {
@@ -51,6 +71,7 @@
             .then(res => res.json())
             .then(data => {
                 updateProduct(data);
+                // console.log(data);                
 
                 //clean input fields
                 document.getElementById('name').value = '';
@@ -68,6 +89,8 @@
             });
 
         function updateProduct(product){
+            const productContainer = document.getElementById('product-list');
+            appendProduct(product, productContainer);
             document.getElementById('productName').innerText = product.name;
         }
     </script>

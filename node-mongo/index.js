@@ -16,19 +16,29 @@ const pass = 'SUFqeYJWxWLb7mdY';
 const uri = "mongodb+srv://dbUser:SUFqeYJWxWLb7mdY@cluster0-gubtv.mongodb.net/test?retryWrites=true&w=majority";
 
 
-const client = new MongoClient(uri, { useNewUrlParser: true });
+let client = new MongoClient(uri, { useNewUrlParser: true });
 const users = ['Shabnoor', 'Popy', 'Mahi', 'Porimoni', 'Shabana'];
 
 
 
 
 
-app.get('/', function (req, res) {
-    const fruits = {
-        prod: 'Pineapple',
-        price: 220
-    }
-  res.send(fruits)
+app.get('/products', function (req, res) {
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    // read data from database
+    client.connect(err => {
+        const collection = client.db("onlineShop").collection("products");
+        collection.find().toArray((err, documents) =>{
+            if(err){
+                console.log(err);
+                res.status(500).send({message: err});
+            }
+            else{
+                res.send(documents);
+            }
+        })
+        client.close();
+    });
 })
 
 app.get('/fruits/banana', (req, res) => {
@@ -49,6 +59,7 @@ app.post('/addProduct', (req, res) => {
     console.log(product);   
 
     // save data to database
+    client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
         const collection = client.db("onlineShop").collection("products");
         collection.insertOne(product, (err, result) =>{
