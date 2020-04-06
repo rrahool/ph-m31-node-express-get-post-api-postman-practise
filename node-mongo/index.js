@@ -24,6 +24,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
   const collection = client.db("onlineShop").collection("products");
   // perform actions on the collection object
+    collection.insertOne({
+        name: 'Laptop',
+        price: 200,
+        stock: 10
+    }, (err, res) =>{
+        console.log("Data Successfully Inserted to Cloud DB");
+    })
+
   console.log("Database Connected");
   
   client.close();
@@ -52,9 +60,10 @@ app.get('/users/:id', (req, res) => {
 // post 
 app.post('/addUser', (req, res) => {
     // console.log('data recieved', req.body);
-    // save data to database
     const user = req.body;
     user.id = 10;
+
+    // save data to database
     res.send(user);
 })
 
