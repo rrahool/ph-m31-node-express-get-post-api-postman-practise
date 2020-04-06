@@ -8,8 +8,27 @@ const users = ['Shabnoor', 'Popy', 'Mahi', 'Porimoni', 'Shabana'];
 
 app.use(cors())
 
+
 // parse application/json
 app.use(bodyParser.json())
+
+// database user's credentials
+const dbUser = 'dbUser';
+const pass = 'SUFqeYJWxWLb7mdY';
+
+// database connection
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://dbUser:SUFqeYJWxWLb7mdY@cluster0-gubtv.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("onlineShop").collection("products");
+  // perform actions on the collection object
+  console.log("Database Connected");
+  
+  client.close();
+});
+
 
 app.get('/', function (req, res) {
     const fruits = {
