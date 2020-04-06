@@ -3,17 +3,14 @@ const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient;
-
-
+require('dotenv').config()
 
 
 app.use(cors())
 app.use(bodyParser.json())
 
 // database user's credentials
-const dbUser = 'dbUser';
-const pass = 'SUFqeYJWxWLb7mdY';
-const uri = "mongodb+srv://dbUser:SUFqeYJWxWLb7mdY@cluster0-gubtv.mongodb.net/test?retryWrites=true&w=majority";
+const uri = process.env.DB_PATH;
 
 
 let client = new MongoClient(uri, { useNewUrlParser: true });
@@ -77,4 +74,5 @@ app.post('/addProduct', (req, res) => {
     });
 })
 
-app.listen(4000, () => console.log('Listening to port 4000'))
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log('Listening to port 4000'))
