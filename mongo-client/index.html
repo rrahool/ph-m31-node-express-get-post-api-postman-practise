@@ -19,6 +19,10 @@
             <br><br>
             <button class="btn btn-primary" id="addProduct">Add Product</button>
         </div>
+
+        <p style="display: none; color: green;" id="successMessage">
+            <small>Product Added Successfully</small>
+        </p>
     </div>
     <script>
         fetch('http://localhost:4000/users/3')
@@ -45,10 +49,25 @@
                 }
             })
             .then(res => res.json())
-            .then(data => updateProduct(data))
+            .then(data => {
+                updateProduct(data);
+
+                //clean input fields
+                document.getElementById('name').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('stock').value = '';
+
+                // show success message
+                const success = document.getElementById('successMessage');
+                success.style.display = 'block';
+                setTimeout(() => {
+                    success.style.display = 'none';
+                }, 5000);
+
+            })
             });
 
-        function updateProduct(user){
+        function updateProduct(product){
             document.getElementById('productName').innerText = product.name;
         }
     </script>

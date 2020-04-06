@@ -51,9 +51,16 @@ app.post('/addProduct', (req, res) => {
     // save data to database
     client.connect(err => {
         const collection = client.db("onlineShop").collection("products");
-        collection.insertOne(product, (err, res) =>{
-            console.log("Data Successfully Inserted to Cloud DB", res);
-            // res.send(product);
+        collection.insertOne(product, (err, result) =>{
+            // console.log("Data Successfully Inserted to Cloud DB", result);
+            if(err){
+                console.log(err);
+                res.status(500).send({message: err});
+            }
+            else{
+                res.send(result.ops[0]);
+            }
+            
         })
         client.close();
     });
