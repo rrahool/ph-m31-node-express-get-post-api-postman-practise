@@ -2,40 +2,25 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const MongoClient = require('mongodb').MongoClient;
 
 
-const users = ['Shabnoor', 'Popy', 'Mahi', 'Porimoni', 'Shabana'];
+
 
 app.use(cors())
-
-
-// parse application/json
 app.use(bodyParser.json())
 
 // database user's credentials
 const dbUser = 'dbUser';
 const pass = 'SUFqeYJWxWLb7mdY';
-
-// database connection
-
-const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://dbUser:SUFqeYJWxWLb7mdY@cluster0-gubtv.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("onlineShop").collection("products");
-  // perform actions on the collection object
-    collection.insertOne({
-        name: 'Laptop',
-        price: 200,
-        stock: 10
-    }, (err, res) =>{
-        console.log("Data Successfully Inserted to Cloud DB");
-    })
 
-  console.log("Database Connected");
-  
-  client.close();
-});
+
+const client = new MongoClient(uri, { useNewUrlParser: true });
+const users = ['Shabnoor', 'Popy', 'Mahi', 'Porimoni', 'Shabana'];
+
+
+
 
 
 app.get('/', function (req, res) {
@@ -58,13 +43,20 @@ app.get('/users/:id', (req, res) => {
 });
 
 // post 
-app.post('/addUser', (req, res) => {
+app.post('/addProduct', (req, res) => {
     // console.log('data recieved', req.body);
-    const user = req.body;
-    user.id = 10;
+    const product = req.body;
+    console.log(product);   
 
     // save data to database
-    res.send(user);
+    client.connect(err => {
+        const collection = client.db("onlineShop").collection("products");
+        collection.insertOne(product, (err, res) =>{
+            console.log("Data Successfully Inserted to Cloud DB", res);
+            // res.send(product);
+        })
+        client.close();
+    });
 })
 
 app.listen(4000, () => console.log('Listening to port 4000'))

@@ -9,41 +9,47 @@
 <body>
     <div class="container">
         <h1>My Node Mongo DB Site</h1>
-        <h6 id="userName"></h6>
+        <h6 id="productName"></h6>
         <div class="row">
-            <input type="text" class="form-control" id="user">
+            <input type="text" class="form-control" id="name" placeholder="Product Name">
             <br><br>
-            <button class="btn btn-primary" id="addUser">Add User</button>
+            <input type="text" class="form-control" id="price" placeholder="Price">
+            <br><br>
+            <input type="text" class="form-control" id="stock" placeholder="Stock">
+            <br><br>
+            <button class="btn btn-primary" id="addProduct">Add Product</button>
         </div>
     </div>
     <script>
         fetch('http://localhost:4000/users/3')
         .then(res => res.json())
         .then(data => {
-            document.getElementById('userName').innerText = data.name;
+            document.getElementById('productName').innerText = data.name;
         });
 
         // POST data to the server
-        const btnAddUser = document.getElementById('addUser');
+        const btnAddUser = document.getElementById('addProduct');
         btnAddUser.addEventListener('click', () => {
-            const name = document.getElementById('user').value;
-            const user = {name}
-            // console.log(user);
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const stock = document.getElementById('stock').value;
+            const product = {name, price, stock}
+            console.log(product);
 
             // post
-            fetch('http://localhost:4000/addUser', {
+            fetch('http://localhost:4000/addProduct', {
                 method: 'POST',
-                body: JSON.stringify(user),
+                body: JSON.stringify(product),
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
                 }
             })
             .then(res => res.json())
-            .then(data => updateUser(data))
+            .then(data => updateProduct(data))
             });
 
-        function updateUser(user){
-            document.getElementById('userName').innerText = user.name;
+        function updateProduct(user){
+            document.getElementById('productName').innerText = product.name;
         }
     </script>
 </body>
